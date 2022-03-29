@@ -19,6 +19,7 @@ def base_url(environment):
 @pytest.fixture(scope="session")
 def url(base_url):
     def _url(path, schema="http"):
+        nonlocal base_url
         if not base_url.startswith("http"):
             base_url = f"{schema}://{base_url}"
         return urljoin(base_url, path)
