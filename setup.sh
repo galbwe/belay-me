@@ -9,5 +9,6 @@ cd backend && \
     source venv/bin/activate && \
     pip install --upgrade pip && \
     pip install -r requirements.dev.txt && \
+    pre-commit install && \
     deactivate && \
     cd ..
