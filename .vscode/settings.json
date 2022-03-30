@@ -2,5 +2,9 @@
     "python.analysis.extraPaths": [
         "./backend/venv/lib/python3.10/site-packages",
         "./backend/src/api"
-    ]
+    ],
+    "mypy.dmypyExecutable": "./backend/venv/bin/dmypy",
+    "python.linting.mypyEnabled": true,
+    "python.linting.enabled": true,
+    "python.linting.flake8Enabled": true,
 }
