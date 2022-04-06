@@ -1,7 +1,9 @@
 from datetime import datetime
-from typing import Dict
+from operator import attrgetter
+from typing import Dict, List
 
-from .errors import InvalidParameter
+from .errors import InvalidParameter, DuplicateEntry
+from .gym import Gym
 from .skills import Skills, create_skills
 
 from email_validator import validate_email, EmailNotValidError
@@ -15,6 +17,7 @@ class User:
         birthday: datetime,
         weight: int,  # weight lbs,
         skills: Skills,
+        gyms: List[Gym] = None,
     ):
         self._validate_email(email)
 
@@ -23,6 +26,7 @@ class User:
         self.birthday = birthday
         self.weight = weight
         self.skills = skills
+        self.gyms = [] if gyms is None else sorted(gyms, key=attrgetter("name"))
 
     def __repr__(self):
         params = [
@@ -36,6 +40,14 @@ class User:
 
     def __eq__(self, other):
         return self.id_ == other.id_
+
+    def add_gym(self, g: Gym) -> None:
+        if g in self.gyms:
+            raise DuplicateEntry(f"User already added gym {g!r}.")
+        self.gyms.append(g)
+
+    def remove_gym(self, g: Gym) -> None:
+        self.gyms.remove(g)
 
     def _validate_email(self, email: str):
         try:

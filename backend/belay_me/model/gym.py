@@ -23,6 +23,12 @@ class Gym:
         self._validate_activities()
         self._sort_activities()
 
+    def __eq__(self, other):
+        return self.name == other.name and self.address == other.address
+
+    def __hash__(self):
+        return (hash(self.name) * hash(self.address)) % 19
+
     def _validate_activities(self):
         if not self.activities:
             raise InvalidParameter("activities cannot be empty")
