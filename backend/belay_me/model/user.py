@@ -1,31 +1,10 @@
 from datetime import datetime
-from dataclasses import dataclass
-from typing import Optional, Dict
+from typing import Dict
 
 from .errors import InvalidParameter
+from .skills import Skills, create_skills
 
 from email_validator import validate_email, EmailNotValidError
-
-
-@dataclass
-class YosemiteDecimalRating:
-    level: int  # 0 - 16
-    sublevel: Optional[str]  # abcd
-
-
-@dataclass
-class VScaleRating:
-    level: int  # 0 - 7
-
-
-Rating = YosemiteDecimalRating | VScaleRating | None
-
-
-@dataclass
-class Skills:
-    top_rope: Rating
-    lead: Rating
-    bouldering: Rating
 
 
 class User:
@@ -63,36 +42,6 @@ class User:
             validate_email(email)
         except EmailNotValidError as e:
             raise InvalidParameter(f"email: {email}") from e
-
-
-def create_rating(r: Optional[str]) -> Rating:
-    if r is None:
-        return None
-    if r.lower().startswith("v"):
-        return _create_v_scale_rating(r)
-    return _create_yosemite_decimal_rating(r)
-
-
-def _create_v_scale_rating(r: str) -> Rating:
-    level = int(r[1:])
-    return VScaleRating(level)
-
-
-def _create_yosemite_decimal_rating(r: str) -> Rating:
-    levels = r.split(".")
-    level = levels[1]
-    sublevel = levels[2] if len(levels) > 2 else None
-    return YosemiteDecimalRating(int(level), sublevel)
-
-
-def create_skills(
-    top_rope: Optional[str], lead: Optional[str], bouldering: Optional[str]
-) -> Skills:
-    return Skills(
-        top_rope=create_rating(top_rope),
-        lead=create_rating(lead),
-        bouldering=create_rating(bouldering),
-    )
 
 
 def create_user(
