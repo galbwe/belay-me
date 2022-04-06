@@ -24,6 +24,7 @@ services:
       - ./backend/test:/app/test
     environment:
       - API_URL=api_dev:80
+    tty: true
 
 networks:
   backend:
