@@ -16,9 +16,9 @@ COPY ./requirements.dev.txt ./
 
 RUN pip install --no-cache-dir --upgrade -r requirements.dev.txt
 
-COPY ./src/api /app/api
+COPY ./belay_me /app/belay_me
 
-CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["uvicorn", "belay_me.api.main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
 
 ###############################################################################
 ###############################################################################
@@ -26,5 +26,8 @@ CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "80"]
 FROM dev as test
 
 COPY ./test /app/test
+COPY ./setup.py /app/
+
+RUN pip install -e .
 
 CMD ["ptw"]  # runs pytest-watch

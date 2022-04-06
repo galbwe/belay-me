@@ -9,7 +9,7 @@ services:
     networks:
       - backend
     volumes:
-      - ./backend/src/api:/app/api
+      - ./backend/belay_me:/app/belay_me
     ports:
       - "8080:80"
   api_tests:
@@ -20,10 +20,11 @@ services:
     networks:
       - backend
     volumes:
-      - ./backend/src/api:/app/api
+      - ./backend/belay_me:/app/belay_me
       - ./backend/test:/app/test
     environment:
       - API_URL=api_dev:80
+    tty: true
 
 networks:
   backend:
