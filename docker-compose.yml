@@ -1,6 +1,20 @@
 version: "3.8"
 
 services:
+  db:
+    image: postgres:9.6
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=belay_me
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=belay_me
+    networks:
+      - backend
+    volumes:
+      - ./backend/data/postgres:/var/lib/postgresql/data
+      - ./backend/scripts/database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: always
   api_dev:
     build:
       context: ./backend
@@ -8,6 +22,10 @@ services:
       target: dev
     networks:
       - backend
+    depends_on:
+      - db
+    environment:
+      - SQLALCHEMY_URI=postgresql://belay_me:password@db:5432/belay_me
     volumes:
       - ./backend/belay_me:/app/belay_me
     ports:
@@ -19,11 +37,14 @@ services:
       target: test
     networks:
       - backend
+    depends_on:
+      - api_dev
+    environment:
+      - SQLALCHEMY_URI=postgresql://belay_me:password@db:5432/belay_me_tests
+      - API_URL=api_dev:80
     volumes:
       - ./backend/belay_me:/app/belay_me
       - ./backend/test:/app/test
-    environment:
-      - API_URL=api_dev:80
     tty: true
 
 networks:
