@@ -27,7 +27,7 @@ class Gym:
         return self.name == other.name and self.address == other.address
 
     def __hash__(self):
-        return (hash(self.name) * hash(self.address)) % 19
+        return (hash(self.name) * hash(self.address)) % 10**19
 
     def _validate_activities(self):
         if not self.activities:
