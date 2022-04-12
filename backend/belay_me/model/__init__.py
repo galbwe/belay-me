@@ -10,7 +10,8 @@ from .user import (
     create_user,
 )
 from .gym import (
-    Activity,
     Gym,
-    create_gym,
+)
+from .activity import (
+    Activity,
 )

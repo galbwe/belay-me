@@ -23,4 +23,17 @@ repos:
     rev: "v0.942"
     hooks:
     -   id: mypy
+        name: mypy_src
+        entry: mypy backend/belay_me/
+        pass_filenames: false
+        additional_dependencies: [types-requests==2.27.15]
+    -   id: mypy
+        name: mypy_unit_tests
+        entry: mypy backend/test/unit
+        pass_filenames: false
+        additional_dependencies: [types-requests==2.27.15]
+    -   id: mypy
+        name: mypy_integration_tests
+        entry: mypy backend/test/integration
+        pass_filenames: false
         additional_dependencies: [types-requests==2.27.15]
