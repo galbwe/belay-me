@@ -2,6 +2,14 @@ import pytest
 from belay_me import model
 
 
+def create_gym(name: str, address: str, activities: list):
+    return model.Gym(
+        name=name,
+        address=address,
+        activities=[model.Activity(name=a) for a in activities],
+    )
+
+
 def test_gym_activities_cannot_be_empty():
     with pytest.raises(model.errors.InvalidParameter):
         model.Gym(
@@ -114,7 +122,7 @@ def test_gyms_with_different_addresses_are_unequal():
 
 
 def test_gym_factory_method():
-    gym = model.create_gym(
+    gym = create_gym(
         "Belay Me",
         "123 Fake St",
         ["top_rope", "lead", "bouldering"],
@@ -131,7 +139,7 @@ def test_gym_factory_method():
 
 
 def test_gym_repr_method():
-    gym = model.create_gym(
+    gym = create_gym(
         "Belay Me",
         "123 Fake St",
         ["top_rope", "lead", "bouldering"],
@@ -150,17 +158,17 @@ def test_gym_repr_method():
 
 
 def test_gyms_are_hashable():
-    gym1 = model.create_gym(
+    gym1 = create_gym(
         "Belay Me",
         "123 Fake St",
         ["top_rope", "lead", "bouldering"],
     )
-    gym2 = model.create_gym(
+    gym2 = create_gym(
         "Belay Me",
         "123 Fake St",
         ["top_rope", "lead"],
     )
-    gym3 = model.create_gym(
+    gym3 = create_gym(
         "Belay Me Too!",
         "456 Fake St",
         ["top_rope", "lead", "bouldering"],

@@ -35,11 +35,3 @@ class Gym:
 
     def _sort_activities(self):
         self.activities = sorted(self.activities, key=attrgetter("name"))
-
-
-def create_gym(name: str, address: str, activities: List[str]) -> Gym:
-    return Gym(
-        name=name,
-        address=address,
-        activities=[Activity(a) for a in activities],
-    )

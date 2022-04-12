@@ -11,7 +11,6 @@ from .user import (
 )
 from .gym import (
     Gym,
-    create_gym,
 )
 from .activity import (
     Activity,

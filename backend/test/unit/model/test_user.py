@@ -7,6 +7,14 @@ def test_model_import():
     assert model
 
 
+def create_gym(name: str, address: str, activities: list):
+    return model.Gym(
+        name=name,
+        address=address,
+        activities=[model.Activity(name=a) for a in activities],
+    )
+
+
 def test_users_with_the_same_id_are_equal():
     u1 = model.create_user(
         id_=1,
@@ -88,7 +96,7 @@ def test_user_gyms():
         weight=120,
         skills={"top_rope": "5.10.a", "lead": "5.8", "bouldering": "V1"},
     )
-    g = model.create_gym(
+    g = create_gym(
         name="Belay Me!",
         address="123 Testing Way",
         activities=["top_rope", "lead", "bouldering"],
@@ -111,7 +119,7 @@ def test_user_cannot_add_same_gym_twice():
         weight=120,
         skills={"top_rope": "5.10.a", "lead": "5.8", "bouldering": "V1"},
     )
-    g = model.create_gym(
+    g = create_gym(
         name="Belay Me!",
         address="123 Testing Way",
         activities=["top_rope", "lead", "bouldering"],
