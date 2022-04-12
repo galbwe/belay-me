@@ -17,13 +17,13 @@ def test_gym_activities_cannot_be_duplicated():
             name="Belay Me",
             address="123 Fake St",
             activities=[
-                model.Activity.TOP_ROPE,
-                model.Activity.TOP_ROPE,
+                model.Activity("top_rope"),
+                model.Activity("top_rope"),
             ],
         )
 
 
-def test_gym_activities_must_be_in_enum():
+def test_gym_activities_must_be_dataclass():
     with pytest.raises(model.errors.InvalidParameter):
         model.Gym(
             name="Belay Me",
@@ -39,16 +39,16 @@ def test_gym_activity_order_doesnt_change_equality():
         name="Belay Me",
         address="123 Fake St",
         activities=[
-            model.Activity.TOP_ROPE,
-            model.Activity.LEAD,
+            model.Activity("top_rope"),
+            model.Activity("lead"),
         ],
     )
     gym2 = model.Gym(
         name="Belay Me",
         address="123 Fake St",
         activities=[
-            model.Activity.LEAD,
-            model.Activity.TOP_ROPE,
+            model.Activity("lead"),
+            model.Activity("top_rope"),
         ],
     )
     assert gym1 == gym2
@@ -59,15 +59,15 @@ def test_changing_activities_does_not_change_gym_identity():
         name="Belay Me",
         address="123 Fake St",
         activities=[
-            model.Activity.TOP_ROPE,
-            model.Activity.LEAD,
+            model.Activity("top_rope"),
+            model.Activity("lead"),
         ],
     )
     gym2 = model.Gym(
         name="Belay Me",
         address="123 Fake St",
         activities=[
-            model.Activity.LEAD,
+            model.Activity("lead"),
         ],
     )
     assert gym1 == gym2
@@ -78,16 +78,16 @@ def test_gyms_with_different_name_are_unequal():
         name="Belay Me",
         address="123 Fake St",
         activities=[
-            model.Activity.TOP_ROPE,
-            model.Activity.LEAD,
+            model.Activity("top_rope"),
+            model.Activity("lead"),
         ],
     )
     gym2 = model.Gym(
         name="Belay Me Too",
         address="123 Fake St",
         activities=[
-            model.Activity.TOP_ROPE,
-            model.Activity.LEAD,
+            model.Activity("top_rope"),
+            model.Activity("lead"),
         ],
     )
     assert gym1 != gym2
@@ -98,16 +98,16 @@ def test_gyms_with_different_addresses_are_unequal():
         name="Belay Me",
         address="123 Fake St",
         activities=[
-            model.Activity.TOP_ROPE,
-            model.Activity.LEAD,
+            model.Activity("top_rope"),
+            model.Activity("lead"),
         ],
     )
     gym2 = model.Gym(
         name="Belay Me",
         address="456 Fake St",
         activities=[
-            model.Activity.TOP_ROPE,
-            model.Activity.LEAD,
+            model.Activity("top_rope"),
+            model.Activity("lead"),
         ],
     )
     assert gym1 != gym2
@@ -123,9 +123,9 @@ def test_gym_factory_method():
         name="Belay Me",
         address="123 Fake St",
         activities=[
-            model.Activity.TOP_ROPE,
-            model.Activity.LEAD,
-            model.Activity.BOULDERING,
+            model.Activity(name="top_rope"),
+            model.Activity(name="lead"),
+            model.Activity(name="bouldering"),
         ],
     )
 
@@ -138,7 +138,7 @@ def test_gym_repr_method():
     )
 
     def expected_activity(a: str):
-        return f"<Activity.{a.upper()}: {a!r}>"
+        return a
 
     top_rope = expected_activity("top_rope")
     lead = expected_activity("lead")
