@@ -19,9 +19,6 @@ class ActivityRepository:
     def __init__(self, session):
         self.session = session
 
-    def add(self, activity: Activity):
-        self.session.add(activity)
-
     def get(self, name):
         return self.session.query(Activity).filter_by(name=name).first()
 
