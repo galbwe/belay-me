@@ -4,11 +4,13 @@ version: '3.1'
 services:
 
   db:
-    image: postgres
+    image: postgres:14.3
     restart: always
     environment:
       POSTGRES_USER: belay_me
       POSTGRES_PASSWORD: belay_me
+    ports:
+      - "5432:5432"
 
   api:
     build:
