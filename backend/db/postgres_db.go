@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 
@@ -32,15 +33,82 @@ func (db *PostgresUserDB) GetUsers() ([]User, error) {
 		return []User{}, e
 	}
 	users := []User{}
-	var currentId string
-	var currentEmail string
-	var currentPasswordHash string
 	for rows.Next() {
-		e := rows.Scan(&currentId, &currentEmail, &currentPasswordHash)
+		u := User{}
+		e := rows.Scan(&u.ID, &u.Email, &u.PasswordHash)
 		if e != nil {
 			return []User{}, e
 		}
-		users = append(users, User{ID: currentId, Email: currentEmail, PasswordHash: currentPasswordHash})
+		users = append(users, u)
 	}
 	return users, nil
+}
+
+func (db *PostgresUserDB) GetUserById(ID string) (User, error) {
+	selectUserById := `
+		SELECT id, email, password_hash
+		FROM users
+		where id = $1;
+	`
+	rows, e := db.pool.Query(context.Background(), selectUserById, ID)
+	if e != nil {
+		rows.Close()
+		return User{}, e
+	}
+
+	u := User{}
+
+	success := rows.Next()
+	if !success {
+		rows.Close()
+		return User{}, errors.New("No User found with ID")
+	}
+	e = rows.Scan(&u.ID, &u.Email, &u.PasswordHash)
+
+	if e != nil {
+		rows.Close()
+		return User{}, e
+	}
+
+	rows.Close()
+	return u, nil
+}
+
+func (db *PostgresUserDB) CreateUser(u User) (User, error) {
+	insertUser := `
+		INSERT INTO users (id, email, password_hash)
+		VALUES ($1, $2, $3)
+		RETURNING id, email, password_hash;
+	`
+
+	rows, e := db.pool.Query(
+		context.Background(),
+		insertUser,
+		u.ID,
+		u.Email,
+		u.PasswordHash,
+	)
+
+	if e != nil {
+		rows.Close()
+		return User{}, e
+	}
+
+	success := rows.Next()
+	if !success {
+		rows.Close()
+		return User{}, errors.New("Could not create new user")
+	}
+
+	newUser := User{}
+
+	e = rows.Scan(&newUser.ID, &newUser.Email, &newUser.PasswordHash)
+
+	if e != nil {
+		rows.Close()
+		return User{}, e
+	}
+
+	rows.Close()
+	return newUser, nil
 }
